@@ -7,7 +7,7 @@ frame_rate = int(video.get(5))
 deadTime = 0 
 dead = [] 
 # frame analysis interval
-interval_time = 2
+interval_time = 5
 
 print(frame_rate)
 print(frame_count)

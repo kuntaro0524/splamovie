@@ -142,21 +142,9 @@ class AnaMP4:
             t_from_start = inttime * i
             # print("{}フレームだよ".format(self.frame_rate * t_from_start))
             self.video.set(1 , self.frame_rate * t_from_start)
-            try:
-                _, frame = self.video.read()
-            except:
-                print("ERROR to read frame")
-                sys.exit()
-            try:
-                cv2.imwrite("UNKO.png", frame)
-            except:
-                print("imwrite error")
-                sys.exit()
-            try:
-                framegray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) 
-            except:
-                print("Convertion error")
-                sys.exit()
+            _, frame = self.video.read()
+            framegray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) 
+            cv2.imwrite("frame_%04d.png"%i, framegray)
 
             # テンプレートが取得した画像に存在するかどうかを確認
             check_death = self.templateMatch(framegray,death_temp)

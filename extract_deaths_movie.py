@@ -15,7 +15,7 @@ deadTime = 0
 dead = [] 
 n=2 
 
-prefix = sys.argv[1].replace(".mp4","")
+prefix = sys.argv[1].replace(".mp4","").replace(".mkv","")
 
 for i in range(int((frame_count / frame_rate)/n)): 
     video.set(1 ,frame_rate * n * i);

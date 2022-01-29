@@ -1,6 +1,6 @@
-import cv2,sys
+import cv2,sys,os
 
-temp = cv2.imread("./template_killed.png", 0)
+temp = cv2.imread("/Users/kuntaro/kundev/splamovie/KillMovie/template_killed.png",0)
 
 def match(img , temp):
  result = cv2.matchTemplate(img, temp, cv2.TM_CCOEFF_NORMED)
@@ -8,20 +8,30 @@ def match(img , temp):
  return (max_val)
 
 video = cv2.VideoCapture(sys.argv[1])
-prefix = sys.argv[1].replace(".mp4","")
+prefix = sys.argv[1].replace(".mp4","").replace(".mkv","")
 frame_count = int(video.get(7)) 
 frame_rate = int(video.get(5))
+
+# New movie name
+movie_name = '%s_kill.mp4' % prefix
+
+if os.path.exists(movie_name):
+  print("Already exists")
+  sys.exit(1)
 
 deadTime = 0 
 kill_records = [] 
 n=2 
 
-print(frame_rate)
-print(frame_count)
+print("Frame rate=",frame_rate)
+print("Frame number=",frame_count)
 
 for i in range(int((frame_count / frame_rate)/n)): 
     video.set(1 ,frame_rate * n * i);
     _, frame = video.read() 
+    if _ == False:
+        print("Program cannot read a frame from input movie file.")
+        sys.exit()
     framegray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) 
     height,width = framegray.shape
     checkVal = match(framegray,temp); 
@@ -41,7 +51,7 @@ kill_index = 1
 
 if len(kill_records)>0 :
     fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
-    newVideo = cv2.VideoWriter('%s_kill.mp4' % prefix, fourcc, frame_rate, (width, height))
+    newVideo = cv2.VideoWriter(movie_name, fourcc, frame_rate, (width, height))
 
     for i in kill_records:
         comment = "Kill index = %5d" % kill_index
@@ -61,3 +71,5 @@ if len(kill_records)>0 :
 
             newVideo.write(frame)
         kill_index+=1
+
+video.release()

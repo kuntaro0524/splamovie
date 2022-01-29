@@ -1,6 +1,6 @@
-import cv2,sys
+import cv2,sys,os
 
-temp = cv2.imread("./template_new.png", 0)
+temp = cv2.imread("/Users/kuntaro/kundev/splamovie/DeathMovie/template_new.png", 0)
 
 def match(img , temp):
  result = cv2.matchTemplate(img, temp, cv2.TM_CCOEFF_NORMED)
@@ -15,7 +15,15 @@ deadTime = 0
 dead = [] 
 n=2 
 
-prefix = sys.argv[1].replace(".mp4","")
+# Prefix of this movie
+prefix = sys.argv[1].replace(".mp4","").replace(".mkv","")
+
+# Death movie name
+death_movie="%s_deaths.mp4"%prefix
+
+if os.path.exists(death_movie):
+	print("Already made.")
+	sys.exit(1)
 
 for i in range(int((frame_count / frame_rate)/n)): 
     video.set(1 ,frame_rate * n * i);
